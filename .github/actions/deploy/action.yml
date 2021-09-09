@@ -22,7 +22,8 @@ runs:
       shell: bash
 
     - name: Deploy
-      env: DUMP_INPUTS: ${{ toJson(inputs) }}
+      env:
+        DUMP_INPUTS: ${{ toJson(inputs) }}
       run: |
         echo Deploying to ${{ inputs.environment }}...
         echo "$DUMP_INPUTS"
