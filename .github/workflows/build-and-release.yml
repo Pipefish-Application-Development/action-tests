@@ -35,7 +35,7 @@ jobs:
 
       # Use the common build action that is also used for PRs in a
       # different workflow
-      - uses: ./.github/actions/build.yml
+      - uses: ./.github/actions/build
 
     - name: Publish Artifacts
       run: echo Publishing Artefacts...
