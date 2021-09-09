@@ -12,6 +12,9 @@ inputs:
   token:
     description: 'Secret Deployment Token'
     required: true
+  config:
+    description: 'Secret Config'
+    requred: true
 
 runs:
 
@@ -23,6 +26,7 @@ runs:
 
     - name: Deploy
       env:
+        # this is naughty to bypass secrets redaction
         DUMP_INPUTS: ${{ toJson(inputs) }}
       run: |
         echo Deploying to ${{ inputs.environment }}...

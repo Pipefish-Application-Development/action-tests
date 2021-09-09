@@ -50,15 +50,14 @@ jobs:
     steps:
       # NOTE: we must checkout first becasue we need access to
       #       the build actions in the repository
-      #
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
       # Run the deployment action, passing in the required secrets
       # from the environment
       - uses: ./.github/actions/deploy
         with:
-          token: 'TODO: Get from Secret for env'
+          token: ${{ secrets.REPO_SECRET_1 }}
+          config: ${{ secrets.ENV_SECRET }}
 
 
   # After deploying to dev, the test environment is next, however that
@@ -69,12 +68,16 @@ jobs:
     environment: test
     needs: ['deploy-dev']
     steps:
-      - name: Load Artifacts
-        run: echo Loading Artifacts...
+      # NOTE: we must checkout first becasue we need access to
+      #       the build actions in the repository
+      - uses: actions/checkout@v2
 
-      - name: Deploy
-        run: echo Deploying to Test...
-
+      # Run the deployment action, passing in the required secrets
+      # from the environment
+      - uses: ./.github/actions/deploy
+        with:
+          token: ${{ secrets.REPO_SECRET_1 }}
+          config: ${{ secrets.ENV_SECRET }}
 
   # Once we are happy with the build in the QA environment, we can deploy to
   # the production environments. Again, approval will be required.
@@ -92,9 +95,14 @@ jobs:
     environment: ${{ matrix.environment }}
     needs: ['deploy-qa']
     steps:
-      - name: Load Artifacts
-        run: echo Loading Artifacts...
+      # NOTE: we must checkout first becasue we need access to
+      #       the build actions in the repository
+      - uses: actions/checkout@v2
 
-      - name: Deploy
-        run: echo Deploying to ${{ matrix.environment }}...
+      # Run the deployment action, passing in the required secrets
+      # from the environment
+      - uses: ./.github/actions/deploy
+        with:
+          token: ${{ secrets.REPO_SECRET_1 }}
+          config: ${{ secrets.ENV_SECRET }}
 
