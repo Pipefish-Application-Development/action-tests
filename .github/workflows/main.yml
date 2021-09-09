@@ -40,6 +40,7 @@ jobs:
   deploy-dev:
     name: Deploy to dev
     runs-on: ubuntu-latest
+    environment: dev
     needs: ['build']
     steps:
       - name: Load Artifacts
@@ -65,10 +66,10 @@ jobs:
 
   # Once we are happy with the build in the test environment, we can deploy to
   # the production environments. Again, approval will be required.
-  deploy:
+  production-deploy:
     strategy:
       matrix:
-        environment: ['dev', 'test', 'prd-customer1', 'prd-customer2']
+        environment: ['prd-customer1', 'prd-customer2']
     name: Deploy to ${{ matrix.environment }} Environment
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
