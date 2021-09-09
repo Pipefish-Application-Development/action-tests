@@ -22,6 +22,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # NOTE: we must checkout first becasue we need access to
+      #       the build actions in the repository
+      #
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
       # Use the common build action that is also used for PRs in a
       # different workflow
       - uses: ./.github/actions/build.yml
