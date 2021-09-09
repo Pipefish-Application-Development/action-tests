@@ -18,7 +18,7 @@ on:
 jobs:
   # Do a build of the application, and publish the artifacts
   build:
-    name: Build Functions
+    name: Build and Test
     runs-on: ubuntu-latest
 
     steps:

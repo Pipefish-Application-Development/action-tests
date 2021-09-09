@@ -48,11 +48,18 @@ jobs:
     environment: dev
     needs: ['build']
     steps:
-      - name: Load Artifacts
-        run: echo Loading Artifacts...
+      # NOTE: we must checkout first becasue we need access to
+      #       the build actions in the repository
+      #
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
 
-      - name: Deploy
-        run: echo Deploying to Dev...
+      # Run the deployment action, passing in the required secrets
+      # from the environment
+      - uses: ./.github/actions/deploy
+        with:
+          token: 'TODO: Get from Secret for env'
+
 
   # After deploying to dev, the test environment is next, however that
   # required approval to proceed

@@ -1,0 +1,32 @@
+#
+# Application Deployment action
+#
+# This is used muliple times in the release pipeline
+# to ensure consistent deployments in different environments
+#
+
+name: 'CISync Build'
+description: 'Builds the web site and functions for CI Sync'
+
+inputs:
+  token:
+    description: 'Secret Deployment Token'
+    required: true
+
+runs:
+
+  using: 'composite'
+  steps:
+    - name: Load Artifacts
+      run: echo Loading Artifacts...
+      shell: bash
+
+    - name: Deploy
+      env: DUMP_INPUTS: ${{ toJson(inputs) }}
+      run: |
+        echo Deploying to ${{ inputs.environment }}...
+        echo "$DUMP_INPUTS"
+      shell: bash
+
+
+
