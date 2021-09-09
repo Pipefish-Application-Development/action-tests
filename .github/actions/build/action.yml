@@ -20,12 +20,15 @@ runs:
   steps:
     - name: Install Dependencies
       run: echo Installing Dependencies...
+      shell: bash
 
     - name: Build
       run: echo Building...
+      shell: bash
 
     - name: Test
       run: echo Testing...
+      shell: bash
 
 
 
