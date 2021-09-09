@@ -9,6 +9,8 @@ name: 'CISync Build'
 description: 'Builds the web site and functions for CI Sync'
 
 inputs:
+  # sample inputs. Tokens and credentials will need to be
+  # passed in by caller.
   token:
     description: 'Secret Deployment Token'
     required: true
@@ -26,7 +28,7 @@ runs:
 
     - name: Deploy
       env:
-        # this is naughty to bypass secrets redaction
+        # the actual values will be redacted if they are secrets
         DUMP_INPUTS: ${{ toJson(inputs) }}
       run: |
         echo Deploying to ${{ inputs.environment }}...
