@@ -31,7 +31,7 @@ runs:
         # the actual values will be redacted if they are secrets
         DUMP_INPUTS: ${{ toJson(inputs) }}
       run: |
-        echo Deploying to ${{ inputs.environment }}...
+        echo Deploying...
         echo "$DUMP_INPUTS"
       shell: bash
 
