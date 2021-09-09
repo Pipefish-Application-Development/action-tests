@@ -1,0 +1,35 @@
+#
+# Application Build action
+#
+# This is used in both the PR and release pipelines
+# to ensure consistent builds
+#
+# This should do:
+# - Checkout
+# - Install Dependencies
+# - Build
+# - Test
+#
+# However it should not package because this may be run in a PR workflow
+# that should not create artifacts.
+#
+
+name: 'CISync Build'
+description: 'Builds the web site and functions for CI Sync'
+runs:
+  using: 'composite'
+  steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    - name: Install Dependencies
+      run: echo Installing Dependencies...
+
+    - name: Build
+      run: echo Building...
+
+    - name: Test
+      run: echo Testing...
+
+
+

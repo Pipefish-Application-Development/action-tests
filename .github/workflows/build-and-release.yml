@@ -1,4 +1,13 @@
-# This is a basic workflow to help you get started with Actions
+#
+# The Continous Deployment workflow
+#
+# This workflow is trigged in a push to main (after a PR)
+# and initiates the build and release process.
+#
+# We automatically deploy to the development environment,
+# then, after approvals enforced by GitHub Environment Approvals
+# we move to QA and then onto production environments.
+#
 
 name: Build and Release
 
@@ -6,35 +15,24 @@ name: Build and Release
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: [ 'main' ]
 
   # Allows you to run this workflow manually from the Actions tab
   #workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
+  # Do a build of the application, and publish the artifacts
   build:
     name: Build Functions
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      # Use the common build action that is also used for PRs in a
+      # different workflow
+      - uses: ./.github/actions/build.yml
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-
-      - name: Publish Artifacts
-        run: echo Publishing Artefacts...
+    - name: Publish Artifacts
+      run: echo Publishing Artefacts...
 
   # After build, we deploy directly into the development environment
   deploy-dev:
@@ -64,11 +62,16 @@ jobs:
         run: echo Deploying to Test...
 
 
-  # Once we are happy with the build in the test environment, we can deploy to
+  # Once we are happy with the build in the QA environment, we can deploy to
   # the production environments. Again, approval will be required.
+  #
+  # This is done as a matrix deployment, but we could equally do this
+  # as individual jobs. In any case, we will need to update the workflow
+  # file for any new or removed environments.
   production-deploy:
     strategy:
       matrix:
+        # list production environments here
         environment: ['prd-customer1', 'prd-customer2']
     name: Deploy to ${{ matrix.environment }} Environment
     runs-on: ubuntu-latest

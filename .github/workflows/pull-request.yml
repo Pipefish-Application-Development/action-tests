@@ -1,0 +1,29 @@
+#
+# The Pull Request Workflow
+#
+# This workflow executes on a pull request to main branch.
+# It performs a build and test cycle to ensure minimum quality
+# requirement and tests pass.
+#
+# We could choose to enable this for any branch or specific patterns
+# like 'release/*'
+#
+
+name: PR Build and Test
+
+on:
+  pull_request:
+    branches: [ 'main' ]
+
+jobs:
+  # Do a build of the application, and publish the artifacts
+  build:
+    name: Build Functions
+    runs-on: ubuntu-latest
+
+    steps:
+      # Use the common build action that is also used for PRs in a
+      # different workflow
+      - uses: ./.github/actions/build.yml
+
+
