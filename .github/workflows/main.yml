@@ -33,31 +33,50 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
 
-      - name: Publish Artefacts
+      - name: Publish Artifacts
         run: echo Publishing Artefacts...
 
-  test:
-    name: Test Functions
+  # After build, we deploy directly into the development environment
+  deploy-dev:
+    name: Deploy to dev
     runs-on: ubuntu-latest
     needs: ['build']
     steps:
-      - name: Load Artefacts
+      - name: Load Artifacts
         run: echo Loading Artefacts...
 
-      - name: Run Tests
-        run: echo Running Tests...
+      - name: Deploy
+        run: echo Deploying to Dev...
 
+  # After deploying to dev, the test environment is next, however that
+  # required approval to proceed
+  deploy-qa:
+    name: Deploy to QA
+    runs-on: ubuntu-latest
+    environment: test
+    needs: ['deploy-dev']
+    steps:
+      - name: Load Artifacts
+        run: echo Loading Artefacts...
+
+      - name: Deploy
+        run: echo Deploying to Test...
+
+
+  # Once we are happy with the build in the test environment, we can deploy to
+  # the production environments. Again, approval will be required.
   deploy:
     strategy:
       matrix:
         environment: ['dev', 'test', 'prd-customer1', 'prd-customer2']
     name: Deploy to ${{ matrix.environment }} Environment
     runs-on: ubuntu-latest
-    needs: ['test']
+    environment: ${{ matrix.environment }}
+    needs: ['deploy-qa']
     steps:
-      - name: Deploy Functions
-        run: echo Deploying functions to ${{ matrix.environment }}...
+      - name: Load Artifacts
+        run: echo Loading Artefacts...
 
-      - name: Deploy Web Site
-        run: echo Deploying web site to ${{ matrix.environment }}...
+      - name: Deploy
+        run: echo Deploying to ${{ matrix.environment }}...
 
