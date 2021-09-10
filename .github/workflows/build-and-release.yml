@@ -59,14 +59,31 @@ jobs:
           token: ${{ secrets.REPO_SECRET_1 }}
           config: ${{ secrets.ENV_SECRET }}
 
-
   # After deploying to dev, the test environment is next, however that
   # required approval to proceed
-  deploy-qa:
-    name: Deploy to QA
+  deploy-test:
+    name: Deploy to Test
     runs-on: ubuntu-latest
     environment: test
     needs: ['deploy-dev']
+    steps:
+      # NOTE: we must checkout first becasue we need access to
+      #       the build actions in the repository
+      - uses: actions/checkout@v2
+
+      # Run the deployment action, passing in the required secrets
+      # from the environment
+      - uses: ./.github/actions/deploy
+        with:
+          token: ${{ secrets.REPO_SECRET_1 }}
+          config: ${{ secrets.ENV_SECRET }}
+
+  # After deploying to QA
+  deploy-qa:
+    name: Deploy to QA
+    runs-on: ubuntu-latest
+    environment: qa
+    needs: ['deploy-test']
     steps:
       # NOTE: we must checkout first becasue we need access to
       #       the build actions in the repository
